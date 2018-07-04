@@ -1,71 +1,18 @@
+import { Navigation } from 'react-native-navigation';
 
-import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { connect } from 'react-redux';
+import AuthScreen from './src/screens/Auth/Auth'
+import FindPlaceScreen from './src/screens/FindPlace/FindPlace';
+import SharePlaceScreen from './src/screens/SharePlace/SharePlace';
 
-import PlaceList from './src/components/PlaceList/PlaceList';
-import PlaceInput from './src/components/PlaceInput/PlaceInput';
-import PlaceDetail from './src/components/PlaceDetail/PlaceDetail';
-import { addPlace, deletePlace, selectPlace, deselectPlace } from './src/store/actions/index'
+// Register Screens
+Navigation.registerComponent("awesome-places.AuthScreen", () => AuthScreen);
+Navigation.registerComponent("awesome-places.FindPlaceScreen", () => FindPlaceScreen); 
+Navigation.registerComponent("awesome-places.SharePlaceScreen", () => SharePlaceScreen); 
 
-class App extends Component {
-  placeAddedHandler = placeName => {
-    this.props.onAddPlace(placeName); 
-  };
-
-  placeDeletedHandler = () => {
-    this.props.onDeletePlace();
-  };
-
-  placeSelectedHandler = index => {
-    this.props.onSelectPlace(index); 
-  };
-
-  modalClosedHandler = () => {
-    this.props.onDeselectPlace(); 
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <PlaceDetail 
-          selectedPlace={this.props.selectedPlace}
-          onItemDeleted={this.placeDeletedHandler}
-          onModalClosed={this.modalClosedHandler} />
-        <PlaceInput 
-          onPlaceAdded={this.placeAddedHandler} />
-        <PlaceList 
-          places={this.props.places}
-          onItemDeleted={this.placeSelectedHandler} /> 
-      </View>
-    );
-  };
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'flex-start'
-  },
+// Start a App 
+Navigation.startSingleScreenApp({
+  screen: {
+    screen: 'awesome-places.AuthScreen',
+    title: 'Login'
+  } 
 });
-
-const mapStateToProps = state => {
-  return {
-    places: state.placesReducer.places,
-    selectedPlace: state.placesReducer.selectedPlace
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onAddPlace: name => dispatch(addPlace(name)),
-    onDeletePlace: () => dispatch(deletePlace()),
-    onSelectPlace: key => dispatch(selectPlace(key)),
-    onDeselectPlace: () => dispatch(deselectPlace())
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App); 
